@@ -1,0 +1,27 @@
+{
+  "name": "rc-cli2",
+  "version": "4.6.0",
+  "description": "a cli for react use typescript",
+  "main": "index.js",
+  "scripts": {
+    "test": "none"
+  },
+  "keywords": [
+    "react",
+    "cli",
+    "webpack"
+  ],
+  "author": "lei.li",
+  "license": "ISC",
+  "bin": {
+    "rc-cli2": "index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wesmile2020/rc-cli2.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wesmile2020/rc-cli2/issues"
+  },
+  "homepage": "https://github.com/wesmile2020/rc-cli2#readme"
+}
