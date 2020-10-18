@@ -1,10 +1,10 @@
 const CopyPlugin = require('copy-webpack-plugin');
-const path = require('path');
 const webpack = require('webpack');
 const HtmlPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCssPlugin = require('optimize-css-assets-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const merge = require('webpack-merge');
 const baseConfig = require('./webpack.base.conf');
 const utils = require('./utils');
@@ -56,21 +56,19 @@ module.exports = merge.merge(baseConfig, {
         new CssExtractPlugin({
             filename: config.build.isSplit ? '[name].[chunkhash].css' : `${config.build.filename}.css`,
         }),
-        new OptimizeCssPlugin({
-            cssProcessorOptions: {
-                safe: true,
-            },
-        }),
     ],
     optimization: {
+        minimizer: [
+            new CssMinimizerPlugin(),
+            new TerserPlugin(),
+        ],
         ...(config.build.isSplit ? {
-            runtimeChunk: {
-                name: 'manifest',
-            },
+            runtimeChunk: true,
             splitChunks: {
                 chunks: 'all',
             },
         } : {}),
         minimize: config.build.isUglify,
+        nodeEnv: 'production',
     }
 });

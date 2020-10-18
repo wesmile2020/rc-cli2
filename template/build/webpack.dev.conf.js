@@ -20,14 +20,8 @@ module.exports = merge.merge(baseConfig, {
     },
     devtool: config.dev.devtool,
     plugins: [
-        new webpack.DefinePlugin({
-            'process.env': {
-                NODE_ENV: '"development"'
-            },
-        }),
         new webpack.NoEmitOnErrorsPlugin(),
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.NamedModulesPlugin(),
         new HtmlPlugin({
             template: utils.resolve('public/index.html'),
             inject: true,
@@ -44,5 +38,8 @@ module.exports = merge.merge(baseConfig, {
                 },
             }]
         }),
-    ]
+    ],
+    optimization: {
+        nodeEnv: 'development',
+    },
 });

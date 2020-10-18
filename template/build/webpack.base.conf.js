@@ -5,7 +5,6 @@ module.exports = {
     entry: [utils.resolve(config.entry)],
     output: {
         filename: '[name].js',
-        globalObject: 'this',
     },
     resolve: {
         extensions: ['.ts', '.tsx', '.js'],
@@ -16,9 +15,7 @@ module.exports = {
             {
                 test: /\.(ts|tsx)$/,
                 enforce: 'pre',
-                loader: [{
-                    loader: 'eslint-loader',
-                }],
+                use: ['eslint-loader'],
             },
             {
                 test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,

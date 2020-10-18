@@ -18,4 +18,5 @@ module.exports = {
     externals: {}, // for global import
     lessModifyVars: {
     },
+    enableViewport: true,
 };

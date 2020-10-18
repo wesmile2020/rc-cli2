@@ -35,7 +35,7 @@ module.exports = {
         'operator-linebreak': 'off',
         'object-curly-newline': 'off',
         'default-case': 'off',
-        'comma-dangle': ['error', {
+        '@typescript-eslint/comma-dangle': ['error', {
             arrays: 'always-multiline',
             objects: 'always-multiline',
             imports: 'always-multiline',
