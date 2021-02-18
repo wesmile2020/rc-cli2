@@ -1,44 +1,52 @@
 const path = require('path');
 const os = require('os');
-const CssExtractPlugin = require('mini-css-extract-plugin');
+const CSSExtractPlugin = require('mini-css-extract-plugin');
 const config = require('./config');
 
+/**
+ * 将相对路径处理成绝对路径
+ * @param {string} dir 路径
+ */
 function resolve(dir) {
     return path.resolve(__dirname, '..', dir);
 }
 
+/**
+ * 生成对应的css-loader
+ * @param {{
+ *  sourceMap: string;
+ *  extract: boolean;
+ *  cssModules: boolean;
+ *  nodeModules: boolean;
+ * }} options 选项
+ */
 function cssLoaders(options = {}) {
-    const cssLoader = {
-        loader: 'css-loader',
-        options: {
-            sourceMap: options.sourceMap,
-            modules: {
-                localIdentName: '[local]_[hash:base64:10]',
-            },
-        },
-    };
-    const postcssLoader = {
-        loader: 'postcss-loader',
-        options: {
-            sourceMap: options.sourceMap,
-        },
-    };
-
     function generateLoaders(loaderName, loaderOptions) {
+        const cssLoader = {
+            loader: 'css-loader',
+            options: {
+                sourceMap: options.sourceMap,
+                modules: options.cssModules ? {
+                    localIdentName: '[local]_[hash:base64:10]',
+                } : false,
+            },
+        };
+        const postcssLoader = {
+            loader: 'postcss-loader',
+            options: {
+                sourceMap: options.sourceMap,
+            },
+        };
         const loaders = options.nodeModules ? ['css-loader'] : [cssLoader, postcssLoader];
         if (loaderName) {
             loaders.push({
                 loader: `${loaderName}-loader`,
-                options: { ...loaderOptions }
+                options: loaderOptions,
             });
         }
-        if (options.extract) {
-            return loaders;
-        }
-
-        return ['style-loader'].concat(loaders);
+        const prefixLoader = options.extract ? CSSExtractPlugin.loader : 'style-loader'
+        return [prefixLoader, ...loaders];
     }
-
     return {
         css: generateLoaders(),
         less: generateLoaders('less', {
@@ -50,13 +58,17 @@ function cssLoaders(options = {}) {
     };
 }
 
+/**
+ * 生成css-loader
+ * @param {*} options
+ */
 function styleLoader(options) {
     const output = [];
     const loaders = cssLoaders({ ...options, nodeModules: false });
     for (const key in loaders) {
         const loader = loaders[key];
         if (options.extract) {
-            loader.unshift(CssExtractPlugin.loader);
+            loader.unshift(CSSExtractPlugin.loader);
         }
         output.push({
             test: new RegExp(`\\.${key}$`),
@@ -65,13 +77,14 @@ function styleLoader(options) {
         });
     }
     const loadersForModules = cssLoaders({
-        nodeModules: true,
         ...options,
+        nodeModules: true,
+        cssModules: false,
     });
     for (const key in loadersForModules) {
         const loader = loadersForModules[key];
         if (options.extract) {
-            loader.unshift(CssExtractPlugin.loader);
+            loader.unshift(CSSExtractPlugin.loader);
         }
         output.push({
             test: new RegExp(`\\.${key}$`),
@@ -82,6 +95,9 @@ function styleLoader(options) {
     return output;
 }
 
+/**
+ * 获取ip地址
+ */
 function getIp() {
     const faces = os.networkInterfaces();
     for (const key in faces) {
