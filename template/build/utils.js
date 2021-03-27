@@ -67,9 +67,6 @@ function styleLoader(options) {
     const loaders = cssLoaders({ ...options, nodeModules: false });
     for (const key in loaders) {
         const loader = loaders[key];
-        if (options.extract) {
-            loader.unshift(CSSExtractPlugin.loader);
-        }
         output.push({
             test: new RegExp(`\\.${key}$`),
             use: loader,
@@ -83,9 +80,6 @@ function styleLoader(options) {
     });
     for (const key in loadersForModules) {
         const loader = loadersForModules[key];
-        if (options.extract) {
-            loader.unshift(CSSExtractPlugin.loader);
-        }
         output.push({
             test: new RegExp(`\\.${key}$`),
             use: loader,
