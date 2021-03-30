@@ -1,12 +1,12 @@
 const path = require('path');
 const fs = require('fs');
-const Git = require('nodegit');
 const ora = require('ora');
 
 const question = require('./question');
 const config = require('./config');
 const FSUtils = require('./FSUtils');
 const log = require('./log');
+const downGit = require('./downGit');
 
 async function init(target) {
     const spinner = ora({
@@ -30,7 +30,7 @@ async function init(target) {
     spinner.start();
 
     try {
-        await Git.Clone(config.templateUrl, target);
+        await downGit(config.templateUrl, target);
         FSUtils.delFile(path.resolve(target, '.git'));
         const nextObj = {
             name: projectName,

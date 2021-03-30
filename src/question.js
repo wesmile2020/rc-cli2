@@ -1,7 +1,6 @@
 const inquirer = require('inquirer');
 
 function question(projectName, validates = {}) {
-    console.log(validates.projectName);
     return inquirer.prompt([
         {
             type: 'input',

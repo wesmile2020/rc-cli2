@@ -1,4 +1,3 @@
-const inquirer = require('inquirer');
 const path = require('path');
 const package = require('../package.json');
 const log = require('./log');
