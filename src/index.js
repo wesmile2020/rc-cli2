@@ -1,6 +1,4 @@
 #!/usr/bin/env node
-
-const path = require('path');
 const package = require('../package.json');
 const log = require('./log');
 const init = require('./init');

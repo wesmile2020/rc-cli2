@@ -1,18 +1,11 @@
 const path = require('path');
 const fs = require('fs');
-const ora = require('ora');
 
 const question = require('./question');
-const config = require('./config');
-const FSUtils = require('./FSUtils');
 const log = require('./log');
-const downGit = require('./downGit');
+const initTemplate = require('./initTemplate');
 
 async function create(cwd, name) {
-    const spinner = ora({
-        text: 'downloading...',
-    });
-
     let projectName = name;
     let description = '';
     try {
@@ -32,22 +25,11 @@ async function create(cwd, name) {
     }
     const target = path.resolve(cwd, projectName);
     fs.mkdirSync(target);
-    spinner.start();
-
-    try {
-        await downGit(config.templateUrl, target);
-        FSUtils.delFile(path.resolve(target, '.git'));
-        const nextObj = {
-            name: projectName,
-            description,
-        };
-        FSUtils.updateJson(path.resolve(target, 'package.json'), nextObj);
-        FSUtils.updateJson(path.resolve(target, 'package-lock.json'), nextObj);
-
-        spinner.succeed('> Your project create success');
-    } catch (error) {
-        spinner.fail('failed:', error.message);
-    }
+  
+    initTemplate(target, {
+        name: projectName,
+        description,
+    });
 }
 
 module.exports = create;

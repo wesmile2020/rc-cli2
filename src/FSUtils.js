@@ -69,7 +69,18 @@ function updateJson(target, replace, format = 4) {
     if (!stat.isFile()) return;
     const obj = JSON.parse(fs.readFileSync(target, { encoding: 'utf-8' }));
     const resultObj = { ...obj, ...replace };
+    console.log(format);
     fs.writeFileSync(target, JSON.stringify(resultObj, null, format));
+}
+
+function replaceText(target, reg, replacer) {
+    if (!fs.existsSync(target)) return;
+    const stat = fs.statSync(target);
+    if (!stat.isFile()) return;
+    const text = fs.readFileSync(target, 'utf-8');
+    const next = text.replace(reg, replacer);
+    console.log(text, next);
+    fs.writeFileSync(target, next);
 }
 
 module.exports = {
@@ -77,4 +88,5 @@ module.exports = {
     copyFile,
     getFileName,
     updateJson,
-}
+    replaceText,
+};
